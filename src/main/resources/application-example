@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: your_project_name
+  datasource:
+      url: jdbc:postgresql://${DB_HOST:localhost}:5432/your_database
+      username: ${DB_USERNAME:your_user}
+      password: "${DB_PASSWORD:your_password}"
+      driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+
