@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @SpringBootTest
@@ -24,10 +25,10 @@ class BookRepositoryTest {
     @Test
     void saveTest() {
         Book book = new Book();
-        book.setDatePublication(LocalDate.of(2001, 8, 10));
+        book.setDatePublication(LocalDate.of(2010, 5, 10));
         book.setGender(GenderBook.FICTION);
-        book.setIsbn("414-232");
-        book.setTitle("UFO");
+        book.setIsbn("414-552");
+        book.setTitle("UFO 3");
         book.setPrice(BigDecimal.valueOf(100));
 
         Author author = authorRepository
@@ -37,7 +38,7 @@ class BookRepositoryTest {
 
         bookRepository.save(book);
     }
-    
+
     @Test
     void saveCascadeTest() {
         Book book = new Book();
@@ -73,6 +74,33 @@ class BookRepositoryTest {
         authorRepository.save(author);
         book.setAuthor(author);
         bookRepository.save(book);
+    }
+
+    @Test
+    void updateAuthorOfBookTest() {
+        var bookToUpdate = bookRepository
+                .findById(UUID.fromString("31a8dd4a-7570-469a-8a8c-c404c3c84b56"))
+                .orElse(null);
+        var updateAuthor = authorRepository
+                .findById(UUID.fromString("93f2da5a-d603-4cf3-88ad-eb78b9453cb7"))
+                .orElse(null);
+
+        if(bookToUpdate != null) {
+            bookToUpdate.setAuthor(updateAuthor);
+            bookRepository.save(bookToUpdate);
+        }
+        throw new NullPointerException("The Book ID is invalid");
+    }
+
+    @Test
+    void deleteByIdTest() {
+        bookRepository.deleteById(UUID.fromString("31a8dd4a-7570-469a-8a8c-c404c3c84b56"));
+    }
+
+    @Test
+    void deleteObjTest() {
+        bookRepository.findById(UUID.fromString("087ff46c-76ee-4d06-8c80-a6e74767d93f"))
+                .ifPresent(bookFound -> bookRepository.delete(bookFound));
     }
 
     @Test
