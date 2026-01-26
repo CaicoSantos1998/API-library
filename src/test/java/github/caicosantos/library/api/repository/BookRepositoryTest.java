@@ -138,4 +138,35 @@ class BookRepositoryTest {
         list.forEach(System.out::println);
     }
 
+    @Test
+    void queryForTitleOrIsbnTest() {
+        List<Book> list = bookRepository.findByTitleOrIsbn("The robbery of the haunted house 2", "523-123");
+        list.forEach(System.out::println);
+    }
+
+    @Test
+    void listBookQueryJPQL() {
+        var result = bookRepository.listAllOrderByTitleAndPrice();
+        result.forEach(System.out::println);
+    }
+
+    @Test
+    void listAuthorBooksTest() {
+        var result = bookRepository.listAuthorBooks();
+        result.forEach(System.out::println);
+    }
+
+    @Test
+    void listNamesDifferentBookTest() {
+        var result = bookRepository.listNamesDifferentBooks();
+        result.forEach(System.out::println);
+    }
+
+    @Test
+    void listBookByGenderAuthorTest() {
+        var result = bookRepository.listBooksByGenderAuthor();
+        result.forEach(System.out::println);
+    }
+
+
 }
