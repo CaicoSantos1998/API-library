@@ -2,8 +2,8 @@ package github.caicosantos.library.api.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.ToString;
 
-import java.awt.print.Book;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
@@ -11,6 +11,7 @@ import java.util.UUID;
 @Entity
 @Table(name = "author")
 @Data
+@ToString(exclude = "books")
 public class Author {
 
     @Id
@@ -24,8 +25,7 @@ public class Author {
     @Column(name = "nationality", length = 50, nullable = false)
     private String nationality;
 
-    /*@OneToMany(mappedBy = "author")*/
-    @Transient
+    @OneToMany(mappedBy = "author", fetch = FetchType.LAZY)
     private List<Book> books;
 
 }

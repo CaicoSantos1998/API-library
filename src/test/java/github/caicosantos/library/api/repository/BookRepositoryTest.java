@@ -109,4 +109,33 @@ class BookRepositoryTest {
         list.forEach(System.out::println);
     }
 
+    @Test
+    void listBooksAuthorTest() {
+        var author = authorRepository.findById(UUID.fromString("b110dc09-145a-4ccf-8908-3f39cbeaf4a7")).get();
+        List<Book> bookList = bookRepository.findByAuthor(author);
+        author.setBooks(bookList);
+        author.getBooks().forEach(System.out::println);
+    }
+
+    @Test
+    void queryForTitleTest() {
+        Optional<Book> list = bookRepository.findByTitle("The robbery of the haunted house");
+        if(list.isEmpty()) {
+            System.out.println("List empty");
+        }
+        System.out.println(list);
+    }
+
+    @Test
+    void queryForIsbnTest() {
+        Book book = bookRepository.findByIsbn("523-123");
+        System.out.println(book);
+    }
+
+    @Test
+    void queryForTitleAndPriceTest() {
+        List<Book> list = bookRepository.findByTitleAndPrice("The robbery of the haunted house 2", BigDecimal.valueOf(150.00));
+        list.forEach(System.out::println);
+    }
+
 }
