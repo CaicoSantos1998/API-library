@@ -37,6 +37,43 @@ class BookRepositoryTest {
 
         bookRepository.save(book);
     }
+    
+    @Test
+    void saveCascadeTest() {
+        Book book = new Book();
+        book.setDatePublication(LocalDate.of(2005, 12, 10));
+        book.setGender(GenderBook.FICTION);
+        book.setIsbn("413-112");
+        book.setTitle("UFO 2");
+        book.setPrice(BigDecimal.valueOf(120));
+
+        Author author = new Author();
+        author.setName("Maria");
+        author.setBirthDate(LocalDate.of(1998, 10, 2));
+        author.setNationality("Brazilian");
+
+        book.setAuthor(author);
+        bookRepository.save(book);
+    }
+
+    @Test
+    void saveAuthorAndBookTest() {
+        Book book = new Book();
+        book.setDatePublication(LocalDate.of(2008, 12, 25));
+        book.setGender(GenderBook.FICTION);
+        book.setIsbn("413-222");
+        book.setTitle("UFO 3");
+        book.setPrice(BigDecimal.valueOf(120));
+
+        Author author = new Author();
+        author.setName("Maria");
+        author.setBirthDate(LocalDate.of(1998, 10, 2));
+        author.setNationality("Brazilian");
+
+        authorRepository.save(author);
+        book.setAuthor(author);
+        bookRepository.save(book);
+    }
 
     @Test
     void findAllTest() {
