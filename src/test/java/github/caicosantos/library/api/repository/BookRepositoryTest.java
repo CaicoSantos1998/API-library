@@ -168,5 +168,21 @@ class BookRepositoryTest {
         result.forEach(System.out::println);
     }
 
+    @Test
+    void listBookByGenderTest() {
+        var result = bookRepository.findByGender(GenderBook.MYSTERY, "datePublication");
+        result.forEach(System.out::println);
+    }
+
+    @Test
+    void deleteByGenderTest() {
+        bookRepository.deleteByGender(GenderBook.FICTION);
+    }
+
+    @Test
+    void updateDatePublicationBookTest() {
+        bookRepository.updateDatePublication(LocalDate.of(2002, 10, 11),
+                UUID.fromString("4af75b32-b6c0-4303-9178-772c8c19f760"));
+    }
 
 }

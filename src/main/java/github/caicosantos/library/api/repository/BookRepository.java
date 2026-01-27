@@ -2,8 +2,11 @@ package github.caicosantos.library.api.repository;
 
 import github.caicosantos.library.api.model.Author;
 import github.caicosantos.library.api.model.Book;
+import github.caicosantos.library.api.model.enums.GenderBook;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -43,4 +46,27 @@ public interface BookRepository extends JpaRepository<Book, UUID> {
         ORDER BY bk.gender
     """)
     List<String> listBooksByGenderAuthor();
+    @Query("""
+        SELECT bk
+        FROM Book AS bk
+        WHERE bk.gender = ?1
+        ORDER BY ?2
+    """)
+    List<Book> findByGender(GenderBook gender, String orderBy);
+
+    @Modifying
+    @Transactional
+    @Query("""
+        DELETE FROM Book
+        WHERE gender = ?1
+    """)
+    void deleteByGender(GenderBook gender);
+    @Modifying
+    @Transactional
+    @Query("""
+        UPDATE Book
+        SET datePublication = ?1
+        WHERE id = ?2
+    """)
+    void updateDatePublication(LocalDate newDate, UUID id);
 }
