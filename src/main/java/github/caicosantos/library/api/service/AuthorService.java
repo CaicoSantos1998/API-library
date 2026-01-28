@@ -41,4 +41,11 @@ public class AuthorService {
         }
         return repository.findAll();
     }
+
+    public Author update(Author author) {
+        if(author.getId()!=null){
+            return repository.save(author);
+        }
+        throw new IllegalArgumentException("To update, the author must exist in the database");
+    }
 }
