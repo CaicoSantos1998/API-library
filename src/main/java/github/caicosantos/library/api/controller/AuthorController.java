@@ -24,7 +24,7 @@ public class AuthorController {
         service.save(obj);
         return ResponseEntity.created(ServletUriComponentsBuilder
                 .fromCurrentRequest()
-                .path("{/id}")
+                .path("/{id}")
                 .buildAndExpand(obj.getId())
                 .toUri()).build();
     }
