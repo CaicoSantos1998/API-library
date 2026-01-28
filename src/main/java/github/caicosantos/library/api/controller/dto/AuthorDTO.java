@@ -4,8 +4,10 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import github.caicosantos.library.api.model.Author;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 public record AuthorDTO(
+        UUID id,
         String name,
         LocalDate birthDate,
         String nationality) {
