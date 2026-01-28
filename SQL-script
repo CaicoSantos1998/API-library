@@ -2,7 +2,10 @@ CREATE TABLE author (
     id UUID NOT NULL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     birth_date DATE NOT NULL,
-    nationality VARCHAR(50) NOT NULL
+    nationality VARCHAR(50) NOT NULL,
+    registration_date TIMESTAMP NOT NULL,
+    date_update TIMESTAMP NOT NULL,
+    id_user UUID
 );
 
 CREATE TABLE book (
@@ -12,6 +15,9 @@ CREATE TABLE book (
     date_publication DATE NOT NULL,
     gender VARCHAR(30) NOT NULL,
     price NUMERIC(18,2) NOT NULL,
+    registration_date TIMESTAMP NOT NULL,
+    date_update TIMESTAMP NOT NULL,
+    id_user UUID,
     id_author UUID NOT NULL REFERENCES author(id),
     CONSTRAINT chk_gender CHECK (gender in ('FICTION', 'FANTASY', 'MYSTERY', 'ROMANCE', 'BIOGRAPHY', 'SCIENCE'))
 );
