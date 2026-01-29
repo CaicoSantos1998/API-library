@@ -6,7 +6,7 @@ import github.caicosantos.library.api.exceptions.DuplicateRegisterException;
 import github.caicosantos.library.api.exceptions.OperationNotPermittedException;
 import github.caicosantos.library.api.model.Author;
 import github.caicosantos.library.api.service.AuthorService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -17,10 +17,10 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/authors")
+@RequiredArgsConstructor
 public class AuthorController {
 
-    @Autowired
-    private AuthorService service;
+    private final AuthorService service;
 
     @PostMapping
     public ResponseEntity<?> save(@RequestBody AuthorDTO authorDTO) {
