@@ -1,6 +1,7 @@
 package github.caicosantos.library.api.controller;
 
 import github.caicosantos.library.api.controller.dto.AuthorDTO;
+import github.caicosantos.library.api.controller.dto.ErrorResponse;
 import github.caicosantos.library.api.model.Author;
 import github.caicosantos.library.api.service.AuthorService;
 import org.springframework.beans.factory.annotation.Autowired;
