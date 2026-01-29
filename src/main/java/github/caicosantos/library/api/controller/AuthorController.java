@@ -6,6 +6,7 @@ import github.caicosantos.library.api.exceptions.DuplicateRegisterException;
 import github.caicosantos.library.api.exceptions.OperationNotPermittedException;
 import github.caicosantos.library.api.model.Author;
 import github.caicosantos.library.api.service.AuthorService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +24,7 @@ public class AuthorController {
     private final AuthorService service;
 
     @PostMapping
-    public ResponseEntity<?> save(@RequestBody AuthorDTO authorDTO) {
+    public ResponseEntity<?> save(@RequestBody @Valid AuthorDTO authorDTO) {
         try {
             Author obj = authorDTO.mappingToAuthor();
             service.save(obj);
