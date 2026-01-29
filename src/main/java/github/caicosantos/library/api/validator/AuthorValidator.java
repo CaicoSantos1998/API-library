@@ -25,6 +25,6 @@ public class AuthorValidator {
         if(author.getId()==null) {
             return authorFound.isPresent();
         }
-        return !author.getId().equals(authorFound.get().getId()) && authorFound.isPresent();
+        return authorFound.isPresent() && !author.getId().equals(authorFound.get().getId());
     }
 }
