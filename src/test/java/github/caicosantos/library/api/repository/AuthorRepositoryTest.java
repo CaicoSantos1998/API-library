@@ -35,7 +35,7 @@ class AuthorRepositoryTest {
 
     @Test
     void updateTest() {
-        Optional<Author> optional = authorRepository.findById(UUID.fromString("7832870e-3925-4405-ad4f-b296fb3566d9"));
+        Optional<Author> optional = authorRepository.findById(UUID.fromString("680e64e2-de9f-4da7-a0bd-e297ef226b69"));
         if(optional.isPresent()) {
             Author authorExist = optional.get();
             authorExist.setBirthDate(LocalDate.of(1997, 10, 30));

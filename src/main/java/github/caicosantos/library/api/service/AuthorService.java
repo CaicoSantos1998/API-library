@@ -1,7 +1,11 @@
 package github.caicosantos.library.api.service;
 
+import github.caicosantos.library.api.exceptions.OperationNotPermittedException;
 import github.caicosantos.library.api.model.Author;
 import github.caicosantos.library.api.repository.AuthorRepository;
+import github.caicosantos.library.api.repository.BookRepository;
+import github.caicosantos.library.api.validator.AuthorValidator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,41 +15,51 @@ import java.util.UUID;
 @Service
 public class AuthorService {
 
-    private final AuthorRepository repository;
-
-    public AuthorService(AuthorRepository repository) {
-        this.repository = repository;
-    }
+    @Autowired
+    private AuthorRepository authorRepository;
+    @Autowired
+    private BookRepository bookRepository;
+    @Autowired
+    private AuthorValidator authorValidator;
 
     public Author save(Author author) {
-        return repository.save(author);
+        authorValidator.validate(author);
+        return authorRepository.save(author);
     }
     
     public Optional<Author> getById(UUID id) {
-        return repository.findById(id);
+        return authorRepository.findById(id);
     }
 
     public void deleteById(Author author) {
-        repository.delete(author);
+        if(authorHaveBook(author)) {
+            throw new OperationNotPermittedException("Operation not permitted! The author has registered books in the database!");
+        }
+        authorRepository.delete(author);
     }
 
     public List<Author> search(String name, String nationality) {
         if(name!=null && nationality!=null) {
-            return repository.findByNameOrNationality(name, nationality);
+            return authorRepository.findByNameOrNationality(name, nationality);
         }
         if(name!=null) {
-            return repository.findByName(name);
+            return authorRepository.findByName(name);
         }
         if(nationality!=null) {
-            return repository.findByNationality(nationality);
+            return authorRepository.findByNationality(nationality);
         }
-        return repository.findAll();
+        return authorRepository.findAll();
     }
 
     public Author update(Author author) {
         if(author.getId()!=null){
-            return repository.save(author);
+            authorValidator.validate(author);
+            return authorRepository.save(author);
         }
         throw new IllegalArgumentException("To update, the author must exist in the database");
+    }
+
+    public boolean authorHaveBook(Author author) {
+        return bookRepository.existsByAuthor(author);
     }
 }

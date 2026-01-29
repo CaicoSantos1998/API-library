@@ -2,6 +2,8 @@ package github.caicosantos.library.api.controller;
 
 import github.caicosantos.library.api.controller.dto.AuthorDTO;
 import github.caicosantos.library.api.controller.dto.ErrorResponse;
+import github.caicosantos.library.api.exceptions.DuplicateRegisterException;
+import github.caicosantos.library.api.exceptions.OperationNotPermittedException;
 import github.caicosantos.library.api.model.Author;
 import github.caicosantos.library.api.service.AuthorService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,14 +23,19 @@ public class AuthorController {
     private AuthorService service;
 
     @PostMapping
-    public ResponseEntity<Void> save(@RequestBody AuthorDTO authorDTO) {
-        Author obj = authorDTO.mappingToAuthor();
-        service.save(obj);
-        return ResponseEntity.created(ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(obj.getId())
-                .toUri()).build();
+    public ResponseEntity<?> save(@RequestBody AuthorDTO authorDTO) {
+        try {
+            Author obj = authorDTO.mappingToAuthor();
+            service.save(obj);
+            return ResponseEntity.created(ServletUriComponentsBuilder
+                    .fromCurrentRequest()
+                    .path("/{id}")
+                    .buildAndExpand(obj.getId())
+                    .toUri()).build();
+        } catch (DuplicateRegisterException e) {
+            var dtoError = ErrorResponse.conflict(e.getMessage());
+            return ResponseEntity.status(dtoError.status()).body(dtoError);
+        }
     }
 
     @GetMapping("/{id}")
@@ -43,13 +50,18 @@ public class AuthorController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable UUID id) {
-        Optional<Author> obj = service.getById(id);
-        if(obj.isEmpty()) {
-            return ResponseEntity.notFound().build();
+    public ResponseEntity<?> delete(@PathVariable UUID id) {
+        try {
+            Optional<Author> obj = service.getById(id);
+            if(obj.isEmpty()) {
+                return ResponseEntity.notFound().build();
+            }
+            service.deleteById(obj.get());
+            return ResponseEntity.noContent().build();
+        } catch (OperationNotPermittedException e) {
+            var errorResponse = ErrorResponse.responseStandard(e.getMessage());
+            return ResponseEntity.status(errorResponse.status()).body(errorResponse);
         }
-        service.deleteById(obj.get());
-        return ResponseEntity.noContent().build();
     }
 
     @GetMapping
@@ -65,16 +77,21 @@ public class AuthorController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> update(@RequestBody AuthorDTO authorDTO, @PathVariable UUID id) {
-        Optional<Author> obj = service.getById(id);
-        if(obj.isEmpty()) {
-            return ResponseEntity.notFound().build();
+    public ResponseEntity<?> update(@RequestBody AuthorDTO authorDTO, @PathVariable UUID id) {
+        try {
+            Optional<Author> obj = service.getById(id);
+            if (obj.isEmpty()) {
+                return ResponseEntity.notFound().build();
+            }
+            var author = obj.get();
+            author.setName(authorDTO.name());
+            author.setNationality(authorDTO.nationality());
+            author.setBirthDate(authorDTO.birthDate());
+            service.update(author);
+            return ResponseEntity.noContent().build();
+        } catch (DuplicateRegisterException e) {
+            var dtoError = ErrorResponse.conflict(e.getMessage());
+            return ResponseEntity.status(dtoError.status()).body(dtoError);
         }
-        var author = obj.get();
-        author.setName(authorDTO.name());
-        author.setNationality(authorDTO.nationality());
-        author.setBirthDate(authorDTO.birthDate());
-        service.update(author);
-        return ResponseEntity.noContent().build();
     }
 }

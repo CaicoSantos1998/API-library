@@ -25,14 +25,14 @@ class BookRepositoryTest {
     @Test
     void saveTest() {
         Book book = new Book();
-        book.setDatePublication(LocalDate.of(2010, 5, 10));
-        book.setGender(GenderBook.FICTION);
+        book.setDatePublication(LocalDate.of(2017, 5, 10));
+        book.setGender(GenderBook.SCIENCE);
         book.setIsbn("414-552");
-        book.setTitle("UFO 3");
+        book.setTitle("The Cigarette's good? Vol.1");
         book.setPrice(BigDecimal.valueOf(100));
 
         Author author = authorRepository
-                .findById(UUID.fromString("7832870e-3925-4405-ad4f-b296fb3566d9"))
+                .findById(UUID.fromString("237cf1a3-fa66-4051-8aa4-1c22303c0b90"))
                 .orElse(null);
         book.setAuthor(author);
 

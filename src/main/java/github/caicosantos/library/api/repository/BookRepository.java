@@ -20,13 +20,13 @@ public interface BookRepository extends JpaRepository<Book, UUID> {
     Book findByIsbn(String isbn);
     List<Book> findByTitleAndPrice(String title, BigDecimal price);
     List<Book> findByTitleOrIsbn(String title, String isbn);
-
     @Query("""
         SELECT bk 
         FROM Book AS bk 
         ORDER BY bk.title, bk.price
     """)
     List<Book> listAllOrderByTitleAndPrice();
+
     @Query("""
         SELECT at
         FROM Book bk
@@ -53,7 +53,6 @@ public interface BookRepository extends JpaRepository<Book, UUID> {
         ORDER BY ?2
     """)
     List<Book> findByGender(GenderBook gender, String orderBy);
-
     @Modifying
     @Transactional
     @Query("""
@@ -61,6 +60,7 @@ public interface BookRepository extends JpaRepository<Book, UUID> {
         WHERE gender = ?1
     """)
     void deleteByGender(GenderBook gender);
+
     @Modifying
     @Transactional
     @Query("""
@@ -69,4 +69,6 @@ public interface BookRepository extends JpaRepository<Book, UUID> {
         WHERE id = ?2
     """)
     void updateDatePublication(LocalDate newDate, UUID id);
+
+    boolean existsByAuthor(Author author);
 }
