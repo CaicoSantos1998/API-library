@@ -2,6 +2,7 @@ package github.caicosantos.library.api.controller;
 
 import github.caicosantos.library.api.controller.dto.AuthorDTO;
 import github.caicosantos.library.api.controller.dto.ErrorResponse;
+import github.caicosantos.library.api.controller.mappers.AuthorMapper;
 import github.caicosantos.library.api.exceptions.DuplicateRegisterException;
 import github.caicosantos.library.api.exceptions.OperationNotPermittedException;
 import github.caicosantos.library.api.model.Author;
@@ -22,16 +23,17 @@ import java.util.UUID;
 public class AuthorController {
 
     private final AuthorService service;
+    private final AuthorMapper mapper;
 
     @PostMapping
-    public ResponseEntity<?> save(@RequestBody @Valid AuthorDTO authorDTO) {
+    public ResponseEntity<?> save(@RequestBody @Valid AuthorDTO dto) {
         try {
-            Author obj = authorDTO.mappingToAuthor();
-            service.save(obj);
+            Author author = mapper.toEntity(dto);
+            service.save(author);
             return ResponseEntity.created(ServletUriComponentsBuilder
                     .fromCurrentRequest()
                     .path("/{id}")
-                    .buildAndExpand(obj.getId())
+                    .buildAndExpand(author.getId())
                     .toUri()).build();
         } catch (DuplicateRegisterException e) {
             var dtoError = ErrorResponse.conflict(e.getMessage());
@@ -41,13 +43,12 @@ public class AuthorController {
 
     @GetMapping("/{id}")
     public ResponseEntity<AuthorDTO> getById(@PathVariable UUID id) {
-        Optional<Author> obj = service.getById(id);
-        if(obj.isPresent()) {
-            Author author = obj.get();
-            AuthorDTO dto = new AuthorDTO(author.getId(), author.getName(), author.getBirthDate(), author.getNationality());
-            return ResponseEntity.ok(dto);
-        }
-        return ResponseEntity.notFound().build();
+        return service
+                .getById(id)
+                .map(author -> {
+                    AuthorDTO dto = mapper.toDTO(author);
+                    return ResponseEntity.ok(dto);
+                }).orElseGet( () ->ResponseEntity.notFound().build() );
     }
 
     @DeleteMapping("/{id}")
@@ -71,9 +72,8 @@ public class AuthorController {
         List<AuthorDTO> authorList =
                 resultSearch
                         .stream()
-                        .map(
-                                author -> new AuthorDTO(author.getId(), author.getName(), author.getBirthDate(), author.getNationality())
-                        ).toList();
+                        .map(mapper::toDTO)
+                        .toList();
         return ResponseEntity.ok(authorList);
     }
 

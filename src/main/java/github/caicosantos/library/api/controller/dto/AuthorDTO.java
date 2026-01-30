@@ -1,6 +1,5 @@
 package github.caicosantos.library.api.controller.dto;
 
-import github.caicosantos.library.api.model.Author;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
@@ -21,11 +20,4 @@ public record AuthorDTO(
         @Size(min = 4, max = 50, message = "The field is outside the allowed size standard!")
         String nationality) {
 
-    public Author mappingToAuthor() {
-        Author author = new Author();
-        author.setName(this.name);
-        author.setBirthDate(this.birthDate);
-        author.setNationality(this.nationality);
-        return author;
-    }
 }
