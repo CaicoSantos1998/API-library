@@ -1,7 +1,7 @@
 package github.caicosantos.library.api.service;
 
-import github.caicosantos.library.api.exceptions.SearchCombinationNotFoundException;
 import github.caicosantos.library.api.exceptions.OperationNotPermittedException;
+import github.caicosantos.library.api.exceptions.SearchCombinationNotFoundException;
 import github.caicosantos.library.api.model.Author;
 import github.caicosantos.library.api.repository.AuthorRepository;
 import github.caicosantos.library.api.repository.BookRepository;
