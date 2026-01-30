@@ -1,11 +1,14 @@
 package github.caicosantos.library.api.service;
 
+import github.caicosantos.library.api.exceptions.SearchCombinationNotFoundException;
 import github.caicosantos.library.api.exceptions.OperationNotPermittedException;
 import github.caicosantos.library.api.model.Author;
 import github.caicosantos.library.api.repository.AuthorRepository;
 import github.caicosantos.library.api.repository.BookRepository;
 import github.caicosantos.library.api.validator.AuthorValidator;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -37,16 +40,21 @@ public class AuthorService {
     }
 
     public List<Author> search(String name, String nationality) {
-        if(name!=null && nationality!=null) {
-            return authorRepository.findByNameOrNationality(name, nationality);
+        var author = new Author();
+        author.setName(name);
+        author.setNationality(nationality);
+        ExampleMatcher matcher = ExampleMatcher
+                .matching()
+                .withIgnorePaths("id", "birthDate")
+                .withIgnoreNullValues()
+                .withIgnoreCase()
+                .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
+        Example<Author> authorExample = Example.of(author, matcher);
+        List<Author> authors = authorRepository.findAll(authorExample);
+        if(authors.isEmpty()) {
+            throw new SearchCombinationNotFoundException("There is no author with that combination!");
         }
-        if(name!=null) {
-            return authorRepository.findByName(name);
-        }
-        if(nationality!=null) {
-            return authorRepository.findByNationality(nationality);
-        }
-        return authorRepository.findAll();
+        return authors;
     }
 
     public Author update(Author author) {

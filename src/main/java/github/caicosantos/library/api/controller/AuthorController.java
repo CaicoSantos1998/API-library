@@ -70,15 +70,15 @@ public class AuthorController {
         List<Author> resultSearch = service.search(name, nationality);
         List<AuthorDTO> authorList =
                 resultSearch
-                .stream()
-                .map(
-                        author -> new AuthorDTO(author.getId(), author.getName(), author.getBirthDate(), author.getNationality())
-                ).toList();
+                        .stream()
+                        .map(
+                                author -> new AuthorDTO(author.getId(), author.getName(), author.getBirthDate(), author.getNationality())
+                        ).toList();
         return ResponseEntity.ok(authorList);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@RequestBody AuthorDTO authorDTO, @PathVariable UUID id) {
+    public ResponseEntity<?> update(@RequestBody @Valid AuthorDTO authorDTO, @PathVariable UUID id) {
         try {
             Optional<Author> obj = service.getById(id);
             if (obj.isEmpty()) {
