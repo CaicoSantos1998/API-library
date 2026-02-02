@@ -4,6 +4,7 @@ import github.caicosantos.library.api.model.Author;
 import github.caicosantos.library.api.model.Book;
 import github.caicosantos.library.api.model.enums.GenderBook;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface BookRepository extends JpaRepository<Book, UUID> {
+public interface BookRepository extends JpaRepository<Book, UUID>, JpaSpecificationExecutor<Book> {
     List<Book> findByAuthor(Author author);
     Optional<Book> findByTitle(String title);
     Book findByIsbn(String isbn);
