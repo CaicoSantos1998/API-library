@@ -41,13 +41,12 @@ public class AuthorController implements GenericController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable UUID id) {
-        Optional<Author> obj = service.getById(id);
-        if (obj.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-        service.deleteById(obj.get());
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<Object> delete(@PathVariable UUID id) {
+        return service.getById(id)
+                .map(author -> {
+                    service.deleteById(author);
+                    return ResponseEntity.noContent().build();
+                }).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping

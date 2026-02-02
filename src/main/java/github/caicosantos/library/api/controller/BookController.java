@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -34,6 +35,15 @@ public class BookController implements GenericController {
                 .map(book -> {
                     BookResultSearchDTO dto = mapper.toDTO(book);
                     return ResponseEntity.ok(dto);
+                }).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Object> deleteById(@PathVariable UUID id) {
+        return service.getById(id)
+                .map(book -> {
+                    service.deleteById(book);
+                    return ResponseEntity.noContent().build();
                 }).orElseGet(() -> ResponseEntity.notFound().build());
     }
 }
