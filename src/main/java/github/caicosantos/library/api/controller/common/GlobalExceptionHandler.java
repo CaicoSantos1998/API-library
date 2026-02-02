@@ -49,4 +49,10 @@ public class GlobalExceptionHandler {
     public ErrorResponse handlerOperationNotPermittedException(OperationNotPermittedException e) {
         return ErrorResponse.responseStandard(e.getMessage());
     }
+
+    @ExceptionHandler(RuntimeException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ErrorResponse handlerErrorsNoHandling(RuntimeException e) {
+        return new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), "An unexpected internal error occurred!", List.of());
+    }
 }

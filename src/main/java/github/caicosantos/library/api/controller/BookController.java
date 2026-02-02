@@ -20,7 +20,7 @@ public class BookController implements GenericController {
     private final BookMapper mapper;
 
     @PostMapping
-    public ResponseEntity<?> save(@RequestBody @Valid BookRegistrationDTO dto) {
+    public ResponseEntity<Void> save(@RequestBody @Valid BookRegistrationDTO dto) {
         Book book = mapper.toEntity(dto);
         bookService.save(book);
         return ResponseEntity
