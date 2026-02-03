@@ -60,4 +60,11 @@ public class BookService {
         }
         return list;
     }
+
+    public Book update(Book book) {
+        if(book.getId()!=null) {
+            return bookRepository.save(book);
+        }
+        throw new IllegalArgumentException("To update, the book must exist in the database!");
+    }
 }
