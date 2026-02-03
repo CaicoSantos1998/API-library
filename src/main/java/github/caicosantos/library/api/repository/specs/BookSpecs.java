@@ -2,6 +2,8 @@ package github.caicosantos.library.api.repository.specs;
 
 import github.caicosantos.library.api.model.Book;
 import github.caicosantos.library.api.model.enums.GenderBook;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.JoinType;
 import org.springframework.data.jpa.domain.Specification;
 
 public class BookSpecs {
@@ -15,7 +17,10 @@ public class BookSpecs {
     }
 
     public static Specification<Book> nameAuthorLike(String name) {
-        return (root, cq, cb) -> cb.like(cb.upper(root.join("author").get("name")), "%" + name.toUpperCase() + "%");
+        return (root, cq, cb) -> {
+            Join<Object, Object> joinAuthor = root.join("author", JoinType.INNER);
+            return cb.like(cb.upper(joinAuthor.get("name")), "%" + name.toUpperCase() + "%");
+        };
     }
 
     public static Specification<Book> genderEqual(GenderBook gender) {

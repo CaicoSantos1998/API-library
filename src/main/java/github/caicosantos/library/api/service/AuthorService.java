@@ -5,10 +5,10 @@ import github.caicosantos.library.api.exceptions.SearchCombinationNotFoundExcept
 import github.caicosantos.library.api.model.Author;
 import github.caicosantos.library.api.repository.AuthorRepository;
 import github.caicosantos.library.api.repository.BookRepository;
+import github.caicosantos.library.api.repository.specs.AuthorSpecs;
 import github.caicosantos.library.api.validator.AuthorValidator;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -40,21 +40,20 @@ public class AuthorService {
     }
 
     public List<Author> search(String name, String nationality) {
-        var author = new Author();
-        author.setName(name);
-        author.setNationality(nationality);
-        ExampleMatcher matcher = ExampleMatcher
-                .matching()
-                .withIgnorePaths("id", "birthDate")
-                .withIgnoreNullValues()
-                .withIgnoreCase()
-                .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
-        Example<Author> authorExample = Example.of(author, matcher);
-        List<Author> authors = authorRepository.findAll(authorExample);
-        if(authors.isEmpty()) {
+        Specification<Author> spec = Specification.where((root, cq, cb) -> cb.conjunction());
+        if(name!=null && !name.isBlank()) {
+            spec = spec.and(AuthorSpecs.nameLike(name));
+        }
+
+        if(nationality!=null&& !nationality.isBlank()) {
+            spec = spec.and(AuthorSpecs.nationalityEqual(nationality));
+        }
+
+        List<Author> list = authorRepository.findAll(spec);
+        if(list.isEmpty()) {
             throw new SearchCombinationNotFoundException("There is no author with that combination!");
         }
-        return authors;
+        return list;
     }
 
     public Author update(Author author) {
