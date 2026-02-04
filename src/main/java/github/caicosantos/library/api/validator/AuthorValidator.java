@@ -4,7 +4,6 @@ import github.caicosantos.library.api.exceptions.DuplicateRegisterException;
 import github.caicosantos.library.api.model.Author;
 import github.caicosantos.library.api.repository.AuthorRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;

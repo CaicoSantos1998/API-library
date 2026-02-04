@@ -7,6 +7,9 @@ import github.caicosantos.library.api.repository.BookRepository;
 import github.caicosantos.library.api.repository.specs.BookSpecs;
 import github.caicosantos.library.api.validator.BookValidator;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -33,7 +36,7 @@ public class BookService {
         bookRepository.delete(book);
     }
 
-    public List<Book> search(String isbn, String title, String nameAuthor, GenderBook gender, Integer yearPublication) {
+    public Page<Book> search(String isbn, String title, String nameAuthor, GenderBook gender, Integer yearPublication, Integer page, Integer pageSize) {
 
         Specification<Book> spec = Specification.where((root, cq, cb) -> cb.conjunction());
 
@@ -57,7 +60,9 @@ public class BookService {
             spec = spec.and(BookSpecs.yearPublicationEqual(yearPublication));
         }
 
-        List<Book> list = bookRepository.findAll(spec);
+        Pageable pageRequest = PageRequest.of(page, pageSize);
+
+        Page<Book> list = bookRepository.findAll(spec, pageRequest);
         if(list.isEmpty()) {
             throw new SearchCombinationNotFoundException("There is not Book with that combination!");
         }

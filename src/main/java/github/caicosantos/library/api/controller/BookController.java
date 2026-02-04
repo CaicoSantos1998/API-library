@@ -8,6 +8,7 @@ import github.caicosantos.library.api.model.enums.GenderBook;
 import github.caicosantos.library.api.service.BookService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -49,17 +50,17 @@ public class BookController implements GenericController {
     }
 
     @GetMapping
-    public ResponseEntity<List<BookResultSearchDTO>> search(
+    public ResponseEntity<Page<BookResultSearchDTO>> search(
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String title,
             @RequestParam(required = false) String nameAuthor,
             @RequestParam(required = false) GenderBook gender,
-            @RequestParam(required = false) Integer yearPublication) {
-        var result = service.search(name, title, nameAuthor, gender, yearPublication);
-        var list = result.stream()
-                .map(mapper::toDTO)
-                .toList();
-        return ResponseEntity.ok(list);
+            @RequestParam(required = false) Integer yearPublication,
+            @RequestParam(required = false, defaultValue = "0") Integer page,
+            @RequestParam(required = false, defaultValue = "10") Integer pageSize) {
+        Page<Book> result = service.search(name, title, nameAuthor, gender, yearPublication, page, pageSize);
+        Page<BookResultSearchDTO> resultPage = result.map(mapper::toDTO);
+        return ResponseEntity.ok(resultPage);
     }
 
     @PutMapping("/{id}")
