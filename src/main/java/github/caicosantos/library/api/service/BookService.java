@@ -5,6 +5,7 @@ import github.caicosantos.library.api.model.Book;
 import github.caicosantos.library.api.model.enums.GenderBook;
 import github.caicosantos.library.api.repository.BookRepository;
 import github.caicosantos.library.api.repository.specs.BookSpecs;
+import github.caicosantos.library.api.validator.BookValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -17,8 +18,10 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class BookService {
     private final BookRepository bookRepository;
+    private final BookValidator validator;
 
     public Book save(Book book) {
+        validator.validate(book);
         return bookRepository.save(book);
     }
 
@@ -63,7 +66,7 @@ public class BookService {
 
     public Book update(Book book) {
         if(book.getId()!=null) {
-            return bookRepository.save(book);
+            validator.validate(bookRepository.save(book));
         }
         throw new IllegalArgumentException("To update, the book must exist in the database!");
     }

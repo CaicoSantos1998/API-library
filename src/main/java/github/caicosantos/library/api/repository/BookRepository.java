@@ -18,7 +18,7 @@ import java.util.UUID;
 public interface BookRepository extends JpaRepository<Book, UUID>, JpaSpecificationExecutor<Book> {
     List<Book> findByAuthor(Author author);
     Optional<Book> findByTitle(String title);
-    Book findByIsbn(String isbn);
+    Optional<Book> findByIsbn(String isbn);
     List<Book> findByTitleAndPrice(String title, BigDecimal price);
     List<Book> findByTitleOrIsbn(String title, String isbn);
     @Query("""

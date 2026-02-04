@@ -3,6 +3,7 @@ package github.caicosantos.library.api.controller.common;
 import github.caicosantos.library.api.controller.dto.ErrorField;
 import github.caicosantos.library.api.controller.dto.ErrorResponse;
 import github.caicosantos.library.api.exceptions.DuplicateRegisterException;
+import github.caicosantos.library.api.exceptions.InvalidRecordException;
 import github.caicosantos.library.api.exceptions.OperationNotPermittedException;
 import github.caicosantos.library.api.exceptions.SearchCombinationNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -34,7 +35,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(SearchCombinationNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handlerSearchCombinationNotFoundException(SearchCombinationNotFoundException e) {
-        return new ErrorResponse(HttpStatus.NOT_FOUND.value(), "There is no author with that combination!", Collections.emptyList());
+        return new ErrorResponse(HttpStatus.NOT_FOUND.value(), e.getMessage(), Collections.emptyList());
     }
 
     @ExceptionHandler(DuplicateRegisterException.class)
@@ -47,6 +48,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(OperationNotPermittedException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handlerOperationNotPermittedException(OperationNotPermittedException e) {
+        return ErrorResponse.responseStandard(e.getMessage());
+    }
+
+    @ExceptionHandler(InvalidRecordException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handlerInvalidRecordException(InvalidRecordException e) {
         return ErrorResponse.responseStandard(e.getMessage());
     }
 

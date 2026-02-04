@@ -128,8 +128,8 @@ class BookRepositoryTest {
 
     @Test
     void queryForIsbnTest() {
-        Book book = bookRepository.findByIsbn("523-123");
-        System.out.println(book);
+        Optional<Book> book = bookRepository.findByIsbn("523-123");
+        book.ifPresent(System.out::println);
     }
 
     @Test
