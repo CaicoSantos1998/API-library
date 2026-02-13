@@ -21,3 +21,10 @@ CREATE TABLE book (
     id_author UUID NOT NULL REFERENCES author(id),
     CONSTRAINT chk_gender CHECK (gender in ('FICTION', 'FANTASY', 'MYSTERY', 'ROMANCE', 'BIOGRAPHY', 'SCIENCE'))
 );
+
+CREATE TABLE tb_user (
+    id UUID NOT NULL PRIMARY KEY,
+    login VARCHAR(20) NOT NULL UNIQUE,
+    password VARCHAR(400) NOT NULL,
+    roles VARCHAR[]
+);
