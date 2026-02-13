@@ -8,7 +8,7 @@ This API allowed users to perform CRUD (Create, Read, Update, Delete) operations
 * **Language:** Java (Spring Boot suggested)
 * **Database:** PostgreSQL
 * **Containerization:** Docker & Docker compose
-* **Dependency management:** Maven or Gradle, Language Java, database Postgres, docker.
+* **Dependency management:** Maven or Gradle.
 
 ## Endpoints (Example)
 * GET/books - List all books.
