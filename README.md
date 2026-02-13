@@ -8,14 +8,13 @@ This API allowed users to perform CRUD (Create, Read, Update, Delete) operations
 * **Language:** Java (Spring Boot suggested)
 * **Database:** PostgreSQL
 * **Containerization:** Docker & Docker compose
-* **Dependency management:** Maven or Gradle
-	Language Java, database Postgres, docker.
+* **Dependency management:** Maven or Gradle, Language Java, database Postgres, docker.
 
 ## Endpoints (Example)
 * GET/books - List all books.
 * POST/books - Register a new book.
 * GET/books/{id} - Get details about a specific book.
-			* GET/authors - List all authors.
+* GET/authors - List all authors.
 * POST/authors - Register a new author.
 * GET/authors/{id} - Get details about a specific author.
 
