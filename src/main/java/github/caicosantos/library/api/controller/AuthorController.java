@@ -7,6 +7,7 @@ import github.caicosantos.library.api.service.AuthorService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,6 +23,7 @@ public class AuthorController implements GenericController {
     private final AuthorMapper mapper;
 
     @PostMapping
+    @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<Void> save(@RequestBody @Valid AuthorDTO dto) {
         Author author = mapper.toEntity(dto);
         service.save(author);
@@ -41,6 +43,7 @@ public class AuthorController implements GenericController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<Object> delete(@PathVariable UUID id) {
         return service.getById(id)
                 .map(author -> {
@@ -61,6 +64,7 @@ public class AuthorController implements GenericController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<Void> update(@RequestBody @Valid AuthorDTO authorDTO, @PathVariable UUID id) {
         Optional<Author> obj = service.getById(id);
         if (obj.isEmpty()) {

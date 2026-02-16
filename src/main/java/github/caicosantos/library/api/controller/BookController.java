@@ -10,18 +10,20 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/books")
+@RequiredArgsConstructor
 public class BookController implements GenericController {
     private final BookService service;
     private final BookMapper mapper;
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('MANAGER', 'OPERATOR')")
     public ResponseEntity<Void> save(@RequestBody @Valid BookRegistrationDTO dto) {
         Book book = mapper.toEntity(dto);
         service.save(book);
@@ -40,6 +42,7 @@ public class BookController implements GenericController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('MANAGER', 'OPERATOR')")
     public ResponseEntity<Object> deleteById(@PathVariable UUID id) {
         return service.getById(id)
                 .map(book -> {
@@ -63,6 +66,7 @@ public class BookController implements GenericController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('MANAGER', 'OPERATOR')")
     public ResponseEntity<Object> update(@RequestBody @Valid BookRegistrationDTO dto, @PathVariable UUID id) {
         return service.getById(id)
                 .map(book -> {

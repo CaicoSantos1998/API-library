@@ -8,6 +8,7 @@ import github.caicosantos.library.api.exceptions.OperationNotPermittedException;
 import github.caicosantos.library.api.exceptions.SearchCombinationNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -55,6 +56,12 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handlerInvalidRecordException(InvalidRecordException e) {
         return ErrorResponse.responseStandard(e.getMessage());
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ErrorResponse handlerAccessDeniedException(AccessDeniedException e) {
+        return new ErrorResponse(HttpStatus.FORBIDDEN.value(), "Access Denied!", List.of());
     }
 
     @ExceptionHandler(RuntimeException.class)
