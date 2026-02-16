@@ -35,8 +35,9 @@ public class Author {
     @LastModifiedDate
     @Column(name = "date_update", nullable = false)
     private LocalDateTime dateUpdate;
-    @Column(name = "id_user")
-    private UUID idUser;
+    @ManyToOne
+    @JoinColumn(name = "id_user")
+    private User user;
 
     @OneToMany(mappedBy = "author", fetch = FetchType.LAZY)
     private List<Book> books;

@@ -2,18 +2,20 @@ package github.caicosantos.library.api.service;
 
 import github.caicosantos.library.api.exceptions.SearchCombinationNotFoundException;
 import github.caicosantos.library.api.model.Book;
+import github.caicosantos.library.api.model.User;
 import github.caicosantos.library.api.model.enums.GenderBook;
 import github.caicosantos.library.api.repository.BookRepository;
 import github.caicosantos.library.api.repository.specs.BookSpecs;
+import github.caicosantos.library.api.security.SecurityService;
 import github.caicosantos.library.api.validator.BookValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -22,9 +24,12 @@ import java.util.UUID;
 public class BookService {
     private final BookRepository bookRepository;
     private final BookValidator validator;
+    private final SecurityService securityService;
 
     public Book save(Book book) {
         validator.validate(book);
+        User user = securityService.getUserLogged().orElseThrow(() -> new UsernameNotFoundException("User unauthenticated"));
+        book.setUser(user);
         return bookRepository.save(book);
     }
 

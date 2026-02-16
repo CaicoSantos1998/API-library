@@ -3,12 +3,15 @@ package github.caicosantos.library.api.service;
 import github.caicosantos.library.api.exceptions.OperationNotPermittedException;
 import github.caicosantos.library.api.exceptions.SearchCombinationNotFoundException;
 import github.caicosantos.library.api.model.Author;
+import github.caicosantos.library.api.model.User;
 import github.caicosantos.library.api.repository.AuthorRepository;
 import github.caicosantos.library.api.repository.BookRepository;
 import github.caicosantos.library.api.repository.specs.AuthorSpecs;
+import github.caicosantos.library.api.security.SecurityService;
 import github.caicosantos.library.api.validator.AuthorValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,9 +25,12 @@ public class AuthorService {
     private final AuthorRepository authorRepository;
     private final BookRepository bookRepository;
     private final AuthorValidator authorValidator;
+    private final SecurityService securityService;
 
     public Author save(Author author) {
         authorValidator.validate(author);
+        User user= securityService.getUserLogged().orElseThrow(() -> new UsernameNotFoundException("User unauthenticated"));
+        author.setUser(user);
         return authorRepository.save(author);
     }
     
