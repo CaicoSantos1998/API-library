@@ -1,6 +1,7 @@
 package github.caicosantos.library.api.controller;
 
-import github.caicosantos.library.api.controller.dto.AuthorDTO;
+import github.caicosantos.library.api.controller.dto.AuthorRegistrationDTO;
+import github.caicosantos.library.api.controller.dto.AuthorResultSearchDTO;
 import github.caicosantos.library.api.controller.mappers.AuthorMapper;
 import github.caicosantos.library.api.model.Author;
 import github.caicosantos.library.api.service.AuthorService;
@@ -24,7 +25,7 @@ public class AuthorController implements GenericController {
 
     @PostMapping
     @PreAuthorize("hasRole('MANAGER')")
-    public ResponseEntity<Void> save(@RequestBody @Valid AuthorDTO dto) {
+    public ResponseEntity<Void> save(@RequestBody @Valid AuthorRegistrationDTO dto) {
         Author author = mapper.toEntity(dto);
         service.save(author);
         return ResponseEntity
@@ -33,11 +34,11 @@ public class AuthorController implements GenericController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<AuthorDTO> getById(@PathVariable UUID id) {
+    public ResponseEntity<AuthorResultSearchDTO> getById(@PathVariable UUID id) {
         return service
                 .getById(id)
                 .map(author -> {
-                    AuthorDTO dto = mapper.toDTO(author);
+                    AuthorResultSearchDTO dto = mapper.toDTO(author);
                     return ResponseEntity.ok(dto);
                 }).orElseGet(() -> ResponseEntity.notFound().build());
     }
@@ -53,9 +54,11 @@ public class AuthorController implements GenericController {
     }
 
     @GetMapping
-    public ResponseEntity<List<AuthorDTO>> search(@RequestParam(required = false) String name, @RequestParam(required = false) String nationality) {
+    public ResponseEntity<List<AuthorResultSearchDTO>> search(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String nationality) {
         List<Author> resultSearch = service.search(name, nationality);
-        List<AuthorDTO> authorList =
+        List<AuthorResultSearchDTO> authorList =
                 resultSearch
                         .stream()
                         .map(mapper::toDTO)
@@ -65,15 +68,17 @@ public class AuthorController implements GenericController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('MANAGER')")
-    public ResponseEntity<Void> update(@RequestBody @Valid AuthorDTO authorDTO, @PathVariable UUID id) {
+    public ResponseEntity<Void> update(
+            @RequestBody @Valid AuthorRegistrationDTO dto,
+            @PathVariable UUID id) {
         Optional<Author> obj = service.getById(id);
         if (obj.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
         var author = obj.get();
-        author.setName(authorDTO.name());
-        author.setNationality(authorDTO.nationality());
-        author.setBirthDate(authorDTO.birthDate());
+        author.setName(dto.name());
+        author.setNationality(dto.nationality());
+        author.setBirthDate(dto.birthDate());
         service.update(author);
         return ResponseEntity.noContent().build();
     }

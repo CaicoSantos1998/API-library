@@ -8,7 +8,7 @@ import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.UUID;
 
-public record AuthorDTO(
+public record AuthorRegistrationDTO(
         UUID id,
         @NotBlank(message = "This field is required!")
         @Size(min = 2, max = 100, message = "The field is outside the allowed size standard!")
