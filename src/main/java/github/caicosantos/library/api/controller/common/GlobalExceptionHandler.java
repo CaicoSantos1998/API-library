@@ -6,8 +6,9 @@ import github.caicosantos.library.api.exceptions.DuplicateRegisterException;
 import github.caicosantos.library.api.exceptions.InvalidRecordException;
 import github.caicosantos.library.api.exceptions.OperationNotPermittedException;
 import github.caicosantos.library.api.exceptions.SearchCombinationNotFoundException;
+import jakarta.validation.ConstraintViolationException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -62,6 +63,12 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public ErrorResponse handlerAccessDeniedException(AccessDeniedException e) {
         return new ErrorResponse(HttpStatus.FORBIDDEN.value(), "Access Denied!", List.of());
+    }
+    
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ErrorResponse handlerDataIntegrityViolationException(DataIntegrityViolationException e) {
+        return new ErrorResponse(HttpStatus.CONFLICT.value(), "This a duplicate key that violates unique constraint!", List.of());
     }
 
     @ExceptionHandler(RuntimeException.class)

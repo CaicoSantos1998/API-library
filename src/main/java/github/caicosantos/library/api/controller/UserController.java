@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
-public class UserController implements GenericController{
+public class UserController implements GenericController {
     private final UserService service;
     private final UserMapper mapper;
 
