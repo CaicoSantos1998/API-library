@@ -31,7 +31,7 @@ public class ClientController implements GenericController {
     @GetMapping("/{id}")
     public ResponseEntity<ClientResultSearchDTO> getById(@PathVariable String id) {
         return service
-                .getById(id)
+                .getByClientId(id)
                 .map(client -> {
                     ClientResultSearchDTO dto = mapper.toDTO(client);
                     return ResponseEntity.ok(dto);

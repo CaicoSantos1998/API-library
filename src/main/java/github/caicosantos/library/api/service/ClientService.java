@@ -20,7 +20,7 @@ public class ClientService implements GenericController {
         repository.save(client);
     }
 
-    public Optional<Client> getById(String clientId) {
+    public Optional<Client> getByClientId(String clientId) {
         return repository.findByClientId(clientId);
     }
 }

@@ -44,7 +44,6 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.CONFLICT)
     public ErrorResponse handlerDuplicateRegisterException(DuplicateRegisterException e) {
         return ErrorResponse.conflict(e.getMessage());
-
     }
 
     @ExceptionHandler(OperationNotPermittedException.class)
@@ -64,7 +63,7 @@ public class GlobalExceptionHandler {
     public ErrorResponse handlerAccessDeniedException(AccessDeniedException e) {
         return new ErrorResponse(HttpStatus.FORBIDDEN.value(), "Access Denied!", List.of());
     }
-    
+
     @ExceptionHandler(DataIntegrityViolationException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     public ErrorResponse handlerDataIntegrityViolationException(DataIntegrityViolationException e) {
