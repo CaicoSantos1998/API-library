@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("tb_users")
+@RequestMapping("/users")
 @RequiredArgsConstructor
 public class UserController implements GenericController{
     private final UserService service;
