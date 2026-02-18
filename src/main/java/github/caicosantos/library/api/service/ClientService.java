@@ -8,6 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -22,5 +23,13 @@ public class ClientService implements GenericController {
 
     public Optional<Client> getByClientId(String clientId) {
         return repository.findByClientId(clientId);
+    }
+
+    public Optional<Client> getById(UUID id) {
+        return repository.findById(id);
+    }
+
+    public void deleteById(Client client) {
+        repository.deleteById(client.getId());
     }
 }
