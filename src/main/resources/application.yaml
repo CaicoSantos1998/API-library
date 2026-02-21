@@ -2,7 +2,7 @@ spring:
   application:
     name: library.api
   datasource:
-      url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:lib_db}
+      url: ${DB_URL}
       username: ${DB_USERNAME}
       password: ${DB_PASSWORD}
       driver-class-name: org.postgresql.Driver

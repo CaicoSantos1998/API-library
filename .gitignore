@@ -33,7 +33,7 @@ build/
 .vscode
 
 ### Credentials and Environment ###
-src/main/resources/.env
+.env
 *.local
 
 ### Docker ###
