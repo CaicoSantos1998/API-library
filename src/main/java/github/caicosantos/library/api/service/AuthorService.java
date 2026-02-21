@@ -6,11 +6,12 @@ import github.caicosantos.library.api.model.Author;
 import github.caicosantos.library.api.model.User;
 import github.caicosantos.library.api.repository.AuthorRepository;
 import github.caicosantos.library.api.repository.BookRepository;
+import github.caicosantos.library.api.repository.UserRepository;
 import github.caicosantos.library.api.repository.specs.AuthorSpecs;
-import github.caicosantos.library.api.security.SecurityService;
 import github.caicosantos.library.api.validator.AuthorValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -25,15 +26,16 @@ public class AuthorService {
     private final AuthorRepository authorRepository;
     private final BookRepository bookRepository;
     private final AuthorValidator authorValidator;
-    private final SecurityService securityService;
+    private final UserRepository userRepository;
 
     public Author save(Author author) {
         authorValidator.validate(author);
-        User user= securityService.getUserLogged().orElseThrow(() -> new UsernameNotFoundException("User unauthenticated"));
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByLogin(username).orElseThrow(() -> new UsernameNotFoundException("User not found!"));
         author.setUser(user);
         return authorRepository.save(author);
     }
-    
+
     public Optional<Author> getById(UUID id) {
         return authorRepository.findById(id);
     }

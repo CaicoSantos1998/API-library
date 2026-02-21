@@ -23,7 +23,7 @@ public class BookController implements GenericController {
     private final BookMapper mapper;
 
     @PostMapping
-    @PreAuthorize("hasAnyRole('MANAGER', 'OPERATOR')")
+    @PreAuthorize("hasAuthority('SCOPE_MANAGER')")
     public ResponseEntity<Void> save(@RequestBody @Valid BookRegistrationDTO dto) {
         Book book = mapper.toEntity(dto);
         service.save(book);
@@ -42,7 +42,7 @@ public class BookController implements GenericController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyRole('MANAGER', 'OPERATOR')")
+    @PreAuthorize("hasAuthority('SCOPE_MANAGER')")
     public ResponseEntity<Object> deleteById(@PathVariable UUID id) {
         return service.getById(id)
                 .map(book -> {
@@ -66,7 +66,7 @@ public class BookController implements GenericController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyRole('MANAGER', 'OPERATOR')")
+    @PreAuthorize("hasAuthority('SCOPE_MANAGER')")
     public ResponseEntity<Object> update(@RequestBody @Valid BookRegistrationDTO dto, @PathVariable UUID id) {
         return service.getById(id)
                 .map(book -> {

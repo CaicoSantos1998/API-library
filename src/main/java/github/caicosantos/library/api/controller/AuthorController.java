@@ -19,12 +19,11 @@ import java.util.UUID;
 @RequestMapping("/authors")
 @RequiredArgsConstructor
 public class AuthorController implements GenericController {
-
     private final AuthorService service;
     private final AuthorMapper mapper;
 
     @PostMapping
-    @PreAuthorize("hasRole('MANAGER')")
+    @PreAuthorize("hasAuthority('SCOPE_MANAGER')")
     public ResponseEntity<Void> save(@RequestBody @Valid AuthorRegistrationDTO dto) {
         Author author = mapper.toEntity(dto);
         service.save(author);
@@ -44,7 +43,7 @@ public class AuthorController implements GenericController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('MANAGER')")
+    @PreAuthorize("hasAuthority('SCOPE_MANAGER')")
     public ResponseEntity<Object> delete(@PathVariable UUID id) {
         return service.getById(id)
                 .map(author -> {
@@ -67,7 +66,7 @@ public class AuthorController implements GenericController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('MANAGER')")
+    @PreAuthorize("hasAuthority('SCOPE_MANAGER')")
     public ResponseEntity<Void> update(
             @RequestBody @Valid AuthorRegistrationDTO dto,
             @PathVariable UUID id) {

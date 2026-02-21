@@ -10,6 +10,7 @@ import jakarta.validation.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -68,6 +69,12 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.CONFLICT)
     public ErrorResponse handlerDataIntegrityViolationException(DataIntegrityViolationException e) {
         return new ErrorResponse(HttpStatus.CONFLICT.value(), "This a duplicate key that violates unique constraint!", List.of());
+    }
+
+    @ExceptionHandler(UsernameNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handlerUsernameNotFoundException(UsernameNotFoundException e) {
+        return ErrorResponse.responseStandard(e.getMessage());
     }
 
     @ExceptionHandler(RuntimeException.class)
