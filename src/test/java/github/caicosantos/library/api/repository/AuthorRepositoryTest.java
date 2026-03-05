@@ -64,9 +64,13 @@ class AuthorRepositoryTest {
 
     @Test
     void deleteObjTest() {
-        var id = UUID.fromString("7832870e-3925-4405-ad4f-b296fb3566d9");
-        var obj = authorRepository.findById(id).get();
-        authorRepository.delete(obj);
+        Author newAuthor = new Author();
+        newAuthor.setName("Author test");
+        newAuthor.setBirthDate(LocalDate.of(2016, 10, 30));
+        newAuthor.setNationality("Brazilian");
+        Author authorSaved = authorRepository.save(newAuthor);
+        Author authorDelete = authorRepository.findById(authorSaved.getId()).get();
+        authorRepository.delete(authorDelete);
     }
 
     @Test

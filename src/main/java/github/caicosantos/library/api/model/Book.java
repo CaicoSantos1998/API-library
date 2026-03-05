@@ -45,7 +45,7 @@ public class Book {
     @JoinColumn(name = "id_user")
     private User user;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "id_author")
     private Author author;
 
