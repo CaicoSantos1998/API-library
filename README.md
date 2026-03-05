@@ -1,4 +1,6 @@
 # API-library
+[![JAVA CI with MAVEN and POSTGRES](https://github.com/CaicoSantos1998/API-library/actions/workflows/ci.yml/badge.svg)](https://github.com/CaicoSantos1998/API-library/actions/workflows/ci.yml)
+
 A robust API for books management, developed in Java with PostgreSQL persistence and containerization via Docker.
 
 ## About Project
