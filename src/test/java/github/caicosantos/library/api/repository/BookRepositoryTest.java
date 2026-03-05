@@ -59,20 +59,19 @@ class BookRepositoryTest {
 
     @Test
     void saveAuthorAndBookTest() {
+        Author author = new Author();
+        author.setName("Maria");
+        author.setBirthDate(LocalDate.of(1998, 10, 2));
+        author.setNationality("Brazilian");
+        Author authorSaved = authorRepository.save(author);
+
         Book book = new Book();
         book.setDatePublication(LocalDate.of(2008, 12, 25));
         book.setGender(GenderBook.FICTION);
         book.setIsbn("413-222");
         book.setTitle("UFO 3");
         book.setPrice(BigDecimal.valueOf(120));
-
-        Author author = new Author();
-        author.setName("Maria");
-        author.setBirthDate(LocalDate.of(1998, 10, 2));
-        author.setNationality("Brazilian");
-
-        authorRepository.save(author);
-        book.setAuthor(author);
+        book.setAuthor(authorSaved);
         bookRepository.save(book);
     }
 
