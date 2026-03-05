@@ -77,6 +77,7 @@ class AuthorRepositoryTest {
         author.setName("Carl");
         author.setBirthDate(LocalDate.of(1975, 10, 25));
         author.setNationality("American");
+        authorRepository.save(author);
 
         Book book = new Book();
         book.setIsbn("532-123");
@@ -93,12 +94,6 @@ class AuthorRepositoryTest {
         book2.setTitle("The robbery of the haunted house 2");
         book2.setPrice(BigDecimal.valueOf(150));
         book2.setAuthor(author);
-
-        author.setBooks(new ArrayList<>());
-        author.getBooks().add(book);
-        author.getBooks().add(book2);
-
-        authorRepository.save(author);
-        bookRepository.saveAll(author.getBooks());
+        bookRepository.saveAll(List.of(book, book2));
     }
 }
