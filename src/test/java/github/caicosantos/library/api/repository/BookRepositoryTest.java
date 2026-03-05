@@ -3,6 +3,7 @@ package github.caicosantos.library.api.repository;
 import github.caicosantos.library.api.model.Author;
 import github.caicosantos.library.api.model.Book;
 import github.caicosantos.library.api.model.enums.GenderBook;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,6 +23,28 @@ class BookRepositoryTest {
     @Autowired
     AuthorRepository authorRepository;
 
+    private Author authorForTests;
+    private Book bookForTests;
+
+    @BeforeEach
+    void dataForTest(){
+        Author author = new Author();
+        author.setName("Author of Tests");
+        author.setBirthDate(LocalDate.of(1990, 1, 1));
+        author.setNationality("Brazilian");
+        this.authorForTests = authorRepository.save(author);
+
+        Book book = new Book();
+        book.setIsbn("978-3-16-148410-0");
+        book.setTitle("BOOK TEST");
+        book.setGender(GenderBook.SCIENCE);
+        book.setDatePublication(LocalDate.of(2017, 5, 10));
+        book.setPrice(BigDecimal.valueOf(100));
+        book.setAuthor(this.authorForTests);
+        this.bookForTests = bookRepository.save(book);
+    }
+
+
     @Test
     void saveTest() {
         Book book = new Book();
@@ -32,7 +55,7 @@ class BookRepositoryTest {
         book.setPrice(BigDecimal.valueOf(100));
 
         Author author = authorRepository
-                .findById(UUID.fromString("237cf1a3-fa66-4051-8aa4-1c22303c0b90"))
+                .findById(authorForTests.getId())
                 .orElse(null);
         book.setAuthor(author);
 
@@ -60,16 +83,16 @@ class BookRepositoryTest {
     @Test
     void saveAuthorAndBookTest() {
         Author author = new Author();
-        author.setName("Maria");
+        author.setName("Author for Test");
         author.setBirthDate(LocalDate.of(1998, 10, 2));
         author.setNationality("Brazilian");
         Author authorSaved = authorRepository.save(author);
 
         Book book = new Book();
-        book.setDatePublication(LocalDate.of(2008, 12, 25));
-        book.setGender(GenderBook.FICTION);
         book.setIsbn("413-222");
         book.setTitle("UFO 3");
+        book.setDatePublication(LocalDate.of(2008, 12, 25));
+        book.setGender(GenderBook.FICTION);
         book.setPrice(BigDecimal.valueOf(120));
         book.setAuthor(authorSaved);
         bookRepository.save(book);
@@ -78,28 +101,24 @@ class BookRepositoryTest {
     @Test
     void updateAuthorOfBookTest() {
         var bookToUpdate = bookRepository
-                .findById(UUID.fromString("31a8dd4a-7570-469a-8a8c-c404c3c84b56"))
+                .findById(bookForTests.getId())
                 .orElse(null);
         var updateAuthor = authorRepository
-                .findById(UUID.fromString("93f2da5a-d603-4cf3-88ad-eb78b9453cb7"))
+                .findById(authorForTests.getId())
                 .orElse(null);
 
-        if(bookToUpdate != null) {
-            bookToUpdate.setAuthor(updateAuthor);
-            bookRepository.save(bookToUpdate);
-        }
-        throw new NullPointerException("The Book ID is invalid");
+        Book book = bookRepository.findById(bookForTests.getId())
+                .orElseThrow(() -> new RuntimeException("The Book not found!"));
     }
 
     @Test
     void deleteByIdTest() {
-        bookRepository.deleteById(UUID.fromString("31a8dd4a-7570-469a-8a8c-c404c3c84b56"));
+        bookRepository.deleteById(bookForTests.getId());
     }
 
     @Test
     void deleteObjTest() {
-        bookRepository.findById(UUID.fromString("087ff46c-76ee-4d06-8c80-a6e74767d93f"))
-                .ifPresent(bookFound -> bookRepository.delete(bookFound));
+        bookRepository.delete(bookForTests);
     }
 
     @Test
@@ -110,7 +129,7 @@ class BookRepositoryTest {
 
     @Test
     void listBooksAuthorTest() {
-        var author = authorRepository.findById(UUID.fromString("b110dc09-145a-4ccf-8908-3f39cbeaf4a7")).get();
+        var author = authorRepository.findById(authorForTests.getId()).get();
         List<Book> bookList = bookRepository.findByAuthor(author);
         author.setBooks(bookList);
         author.getBooks().forEach(System.out::println);
@@ -118,7 +137,7 @@ class BookRepositoryTest {
 
     @Test
     void queryForTitleTest() {
-        Optional<Book> list = bookRepository.findByTitle("The robbery of the haunted house");
+        Optional<Book> list = bookRepository.findByTitle("BOOK TEST");
         if(list.isEmpty()) {
             System.out.println("List empty");
         }
@@ -181,7 +200,7 @@ class BookRepositoryTest {
     @Test
     void updateDatePublicationBookTest() {
         bookRepository.updateDatePublication(LocalDate.of(2002, 10, 11),
-                UUID.fromString("4af75b32-b6c0-4303-9178-772c8c19f760"));
+                UUID.fromString(bookForTests.getId().toString()));
     }
 
 }

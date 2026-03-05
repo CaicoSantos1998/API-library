@@ -3,6 +3,7 @@ package github.caicosantos.library.api.repository;
 import github.caicosantos.library.api.model.Author;
 import github.caicosantos.library.api.model.Book;
 import github.caicosantos.library.api.model.enums.GenderBook;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,6 +24,17 @@ class AuthorRepositoryTest {
     @Autowired
     BookRepository bookRepository;
 
+    private Author authorForTests;
+
+    @BeforeEach
+    void dataForTest() {
+        Author author = new Author();
+        author.setName("Author of Tests");
+        author.setBirthDate(LocalDate.of(1990, 1, 1));
+        author.setNationality("Brazilian");
+        this.authorForTests = authorRepository.save(author);
+    }
+
     @Test
     void saveTest() {
         Author author = new Author();
@@ -35,11 +47,10 @@ class AuthorRepositoryTest {
 
     @Test
     void updateTest() {
-        Optional<Author> optional = authorRepository.findById(UUID.fromString("680e64e2-de9f-4da7-a0bd-e297ef226b69"));
+        Optional<Author> optional = authorRepository.findById(authorForTests.getId());
         if(optional.isPresent()) {
             Author authorExist = optional.get();
             authorExist.setBirthDate(LocalDate.of(1997, 10, 30));
-
             authorRepository.save(authorExist);
         }
     }
@@ -51,26 +62,13 @@ class AuthorRepositoryTest {
     }
 
     @Test
-    void countTest() {
-        System.out.println("Count test..." + authorRepository.count());
-    }
-
-    @Test
     void deleteByIdTest() {
-        var id = UUID.fromString("7832870e-3925-4405-ad4f-b296fb3566d9");
-        authorRepository.findById(id);
-
+        authorRepository.deleteById(authorForTests.getId());
     }
 
     @Test
     void deleteObjTest() {
-        Author newAuthor = new Author();
-        newAuthor.setName("Author test");
-        newAuthor.setBirthDate(LocalDate.of(2016, 10, 30));
-        newAuthor.setNationality("Brazilian");
-        Author authorSaved = authorRepository.save(newAuthor);
-        Author authorDelete = authorRepository.findById(authorSaved.getId()).get();
-        authorRepository.delete(authorDelete);
+        authorRepository.delete(authorForTests);
     }
 
     @Test
