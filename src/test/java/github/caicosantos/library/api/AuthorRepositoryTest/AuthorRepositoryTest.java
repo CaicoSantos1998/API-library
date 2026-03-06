@@ -6,10 +6,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import static org.junit.jupiter.api.Assertions.*;
 
 import java.time.LocalDate;
 import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 public class AuthorRepositoryTest {
@@ -53,5 +54,12 @@ public class AuthorRepositoryTest {
         authorRepository.deleteById(authorForTests.getId());
         boolean exists = authorRepository.existsById(authorForTests.getId());
         assertFalse(exists, "The author should have been removed from the database!");
+    }
+
+    @Test
+    void updateAuthorTest() {
+        Author authorFound = authorRepository.findById(authorForTests.getId()).orElseThrow();
+        authorFound.setName("AUTHOR TEST UPDATED");
+        authorRepository.save(authorFound);
     }
 }
