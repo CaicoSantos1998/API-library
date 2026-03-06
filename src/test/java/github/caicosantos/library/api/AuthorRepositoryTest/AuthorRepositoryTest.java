@@ -1,0 +1,40 @@
+package github.caicosantos.library.api.AuthorRepositoryTest;
+
+import github.caicosantos.library.api.model.Author;
+import github.caicosantos.library.api.repository.AuthorRepository;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.time.LocalDate;
+
+@SpringBootTest
+public class AuthorRepositoryTest {
+
+    AuthorRepository authorRepository;
+
+    private Author AuthorForTests;
+
+    @BeforeEach
+    void dataForTests() {
+        Author author = new Author();
+        author.setName("AUTHOR TEST!");
+        author.setBirthDate(LocalDate.of(2026, 3, 6));
+        author.setNationality("Brazilian");
+        this.AuthorForTests = authorRepository.save(author);
+    }
+
+    @Test
+    void saveAuthorTest() {
+        Author newAuthor = new Author();
+        newAuthor.setName("AUTHOR SAVED");
+        newAuthor.setBirthDate(LocalDate.of(2026,3, 5));
+        newAuthor.setNationality("Brazilian");
+        Author save = authorRepository.save(newAuthor);
+
+        assertNotNull(save.getId(), "The ID cannot be null");
+        assertEquals("AUTHOR SAVED", save.getName(), "Incorrect name!");
+        assertNotNull(save.getRegistrationDate(), "The registration date should be generated");
+    }
+}
