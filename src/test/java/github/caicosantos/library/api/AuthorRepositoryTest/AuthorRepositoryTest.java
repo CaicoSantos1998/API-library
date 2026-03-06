@@ -4,6 +4,7 @@ import github.caicosantos.library.api.model.Author;
 import github.caicosantos.library.api.repository.AuthorRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -11,7 +12,7 @@ import java.time.LocalDate;
 
 @SpringBootTest
 public class AuthorRepositoryTest {
-
+    @Autowired
     AuthorRepository authorRepository;
 
     private Author AuthorForTests;
