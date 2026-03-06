@@ -9,21 +9,22 @@ import org.springframework.boot.test.context.SpringBootTest;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 @SpringBootTest
 public class AuthorRepositoryTest {
     @Autowired
     AuthorRepository authorRepository;
 
-    private Author AuthorForTests;
+    private Author authorForTests;
 
     @BeforeEach
     void dataForTests() {
         Author author = new Author();
-        author.setName("AUTHOR TEST!");
+        author.setName("AUTHOR TEST");
         author.setBirthDate(LocalDate.of(2026, 3, 6));
         author.setNationality("Brazilian");
-        this.AuthorForTests = authorRepository.save(author);
+        this.authorForTests = authorRepository.save(author);
     }
 
     @Test
@@ -37,5 +38,13 @@ public class AuthorRepositoryTest {
         assertNotNull(save.getId(), "The ID cannot be null");
         assertEquals("AUTHOR SAVED", save.getName(), "Incorrect name!");
         assertNotNull(save.getRegistrationDate(), "The registration date should be generated");
+    }
+
+    @Test
+    void findByIdTest() {
+        Optional<Author> authorFound = authorRepository.findById(authorForTests.getId());
+        assertTrue(authorFound.isPresent(), "The author should be founded!");
+        assertEquals("AUTHOR TEST", authorFound.get().getName());
+        assertEquals("Brazilian", authorFound.get().getNationality());
     }
 }
