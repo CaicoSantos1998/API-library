@@ -39,7 +39,7 @@ public class Author {
     @JoinColumn(name = "id_user")
     private User user;
 
-    @OneToMany(mappedBy = "author", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "author", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Book> books;
 
 }
