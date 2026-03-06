@@ -12,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -51,8 +52,14 @@ public class BookRepositoryTest {
         book.setDatePublication(LocalDate.of(2026,3,6));
         book.setAuthor(this.authorForTests);
         Book save = bookRepository.save(book);
-        assertNotNull(save.getId());
-        assertEquals(this.authorForTests.getId(), save.getAuthor().getId());
+        assertNotNull(save.getId(), "The ID cannot be null!");
+        assertEquals(this.authorForTests.getId(), save.getAuthor().getId(), "This author's ID is different!");
     }
 
+    @Test
+    void findByTest() {
+        Optional<Book> bookFound = bookRepository.findById(bookForTests.getId());
+        assertTrue(bookFound.isPresent(), "The book should be founded!");
+        assertEquals("BOOK TEST", bookFound.get().getTitle());
+    }
 }
