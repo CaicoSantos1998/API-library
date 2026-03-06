@@ -47,4 +47,11 @@ public class AuthorRepositoryTest {
         assertEquals("AUTHOR TEST", authorFound.get().getName());
         assertEquals("Brazilian", authorFound.get().getNationality());
     }
+
+    @Test
+    void deleteByIdTest() {
+        authorRepository.deleteById(authorForTests.getId());
+        boolean exists = authorRepository.existsById(authorForTests.getId());
+        assertFalse(exists, "The author should have been removed from the database!");
+    }
 }
