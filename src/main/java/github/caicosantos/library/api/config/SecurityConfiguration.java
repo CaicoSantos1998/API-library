@@ -22,10 +22,7 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(Customizer.withDefaults())
                 .authorizeHttpRequests(auth ->
-                        auth.requestMatchers(
-                                "/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**"
-                        )
-                                .permitAll()
+                        auth.requestMatchers("/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/users/**").permitAll()
                                 .anyRequest().authenticated()
                 )
