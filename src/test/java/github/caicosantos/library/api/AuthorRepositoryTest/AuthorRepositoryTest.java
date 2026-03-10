@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
-@ActiveProfiles("TEST")
+@ActiveProfiles("test")
 public class AuthorRepositoryTest {
     @Autowired
     AuthorRepository authorRepository;

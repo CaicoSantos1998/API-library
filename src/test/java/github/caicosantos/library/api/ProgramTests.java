@@ -7,7 +7,7 @@ import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest
-@ActiveProfiles("TEST")
+@ActiveProfiles("test")
 class ProgramTests {
 
 	@MockBean
