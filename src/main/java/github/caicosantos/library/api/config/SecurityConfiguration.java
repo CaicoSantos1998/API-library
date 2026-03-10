@@ -19,18 +19,17 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity hs) throws Exception {
         return hs
-                .authorizeHttpRequests(auth ->
-                        auth.requestMatchers("/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**")
-                                .permitAll()
-                                .anyRequest()
-                                .authenticated()
-                )
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(Customizer.withDefaults())
-                .authorizeHttpRequests(authorize -> {
-                    authorize.requestMatchers(HttpMethod.POST, "/users/**").permitAll();
-                    authorize.anyRequest().authenticated();
-                })
+                .authorizeHttpRequests(auth ->
+                        auth.requestMatchers(
+                                "/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**"
+                        )
+                                .permitAll()
+                                .requestMatchers(HttpMethod.POST, "/users/**").permitAll()
+                                .anyRequest().authenticated()
+                )
+                .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
                 .build();
     }
 }

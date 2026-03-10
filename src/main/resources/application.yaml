@@ -6,6 +6,11 @@ spring:
       username: ${DB_USERNAME}
       password: ${DB_PASSWORD}
       driver-class-name: org.postgresql.Driver
+  security:
+    oauth2:
+      resource-server:
+        jwt:
+          issuer-uri: ${ISSUER_URI}
   jpa:
     show-sql: true
     properties:
