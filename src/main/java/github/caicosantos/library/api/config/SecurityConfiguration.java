@@ -20,7 +20,6 @@ public class SecurityConfiguration {
     public SecurityFilterChain filterChain(HttpSecurity hs) throws Exception {
         return hs
                 .csrf(AbstractHttpConfigurer::disable)
-                .httpBasic(Customizer.withDefaults())
                 .authorizeHttpRequests(auth ->
                         auth.requestMatchers("/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/users/**").permitAll()
