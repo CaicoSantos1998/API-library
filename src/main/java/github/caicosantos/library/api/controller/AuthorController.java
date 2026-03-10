@@ -1,5 +1,7 @@
 package github.caicosantos.library.api.controller;
 
+import github.caicosantos.library.api.config.ApiConflictErrors;
+import github.caicosantos.library.api.config.ApiStandardErrors;
 import github.caicosantos.library.api.controller.dto.AuthorRegistrationDTO;
 import github.caicosantos.library.api.controller.dto.AuthorResultSearchDTO;
 import github.caicosantos.library.api.controller.mappers.AuthorMapper;
@@ -24,17 +26,17 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Tag(name = "Authors")
 public class AuthorController implements GenericController {
-
     private final AuthorService service;
     private final AuthorMapper mapper;
 
     @PostMapping
     @PreAuthorize("hasRole('MANAGER')")
     @Operation(summary = "Save", description = "Register the new author!")
+    @ApiStandardErrors
+    @ApiConflictErrors
     @ApiResponses({
-            @ApiResponse(responseCode = "201", description = "The author was successfully registered!"),
-            @ApiResponse(responseCode = "409", description = "The author is already registered in the database!"),
-            @ApiResponse(responseCode = "422", description = "Validation error!")
+            @ApiResponse(responseCode = "201", description = "Record created successfully!"),
+            @ApiResponse(responseCode = "422", description = "Please check the information provided!")
 
     })
     public ResponseEntity<Void> save(@RequestBody @Valid AuthorRegistrationDTO dto) {
@@ -45,10 +47,11 @@ public class AuthorController implements GenericController {
                 .build();
     }
 
-    @Operation(summary = "Get", description = "Find the author by ID")
+    @Operation(summary = "Get by Id", description = "Find a specific book using its unique ID!")
+    @ApiStandardErrors
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "The author was found!"),
-            @ApiResponse(responseCode = "404", description = "The author could not be found!")
+            @ApiResponse(responseCode = "200", description = "Request completed successfully!"),
+            @ApiResponse(responseCode = "404", description = "We couldn't find the requested author!")
     })
     @GetMapping("/{id}")
     public ResponseEntity<AuthorResultSearchDTO> getById(@PathVariable UUID id) {
@@ -63,10 +66,11 @@ public class AuthorController implements GenericController {
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('MANAGER')")
     @Operation(summary = "Delete", description = "Delete the author")
+    @ApiStandardErrors
+    @ApiConflictErrors
     @ApiResponses({
-            @ApiResponse(responseCode = "204", description = "Deleting with success!"),
-            @ApiResponse(responseCode = "400", description = "The author has books registered in the database!"),
-            @ApiResponse(responseCode = "404", description = "The author could not be found!"),
+            @ApiResponse(responseCode = "204", description = "Record removed successfully!"),
+            @ApiResponse(responseCode = "404", description = "We couldn't find the requested author!")
     })
     public ResponseEntity<Object> delete(@PathVariable UUID id) {
         return service.getById(id)
@@ -78,8 +82,9 @@ public class AuthorController implements GenericController {
 
     @GetMapping
     @Operation(summary = "Search", description = "Perform author searches using parameters!")
+    @ApiStandardErrors
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Success!")
+            @ApiResponse(responseCode = "200", description = "Request completed successfully!")
     })
     public ResponseEntity<List<AuthorResultSearchDTO>> search(
             @RequestParam(required = false) String name,
@@ -96,10 +101,11 @@ public class AuthorController implements GenericController {
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('MANAGER')")
     @Operation(summary = "Update", description = "Update the exist author!")
+    @ApiStandardErrors
+    @ApiConflictErrors
     @ApiResponses({
-            @ApiResponse(responseCode = "204", description = "Updated with success!"),
-            @ApiResponse(responseCode = "404", description = "The author could not be found!"),
-            @ApiResponse(responseCode = "409)", description = "The author is already registered in the database!")
+            @ApiResponse(responseCode = "204", description = "Record updated successfully!"),
+            @ApiResponse(responseCode = "404", description = "We couldn't find the requested author!")
     })
     public ResponseEntity<Void> update(
             @RequestBody @Valid AuthorRegistrationDTO dto,
